@@ -27,18 +27,20 @@ export class ErrorInterceptor implements HttpInterceptor {
 
         if (error instanceof HttpErrorResponse) {
           if (error.status === 0) {
+            // Abborted request error
             this.operationStatusService.displayStatus(
               `Something went wrong, ${error.error.title}`,
               errorStyle
             );
           } else if (error.status == 401 || error.status == 403) {
-            // dispatch logout action
+            // dispatch logout action for un authorized user
             this.operationStatusService.displayStatus(
               error.error.title,
               errorStyle,
               0
             );
           } else {
+            // general server errors
             this.operationStatusService.displayStatus(
               error.error.title,
               errorStyle,
@@ -48,6 +50,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           return of();
         }
         return throwError(() => {
+          // logic errors in implimentation of functions 
           this.operationStatusService.displayStatus(
             error.error.title,
             errorStyle,
